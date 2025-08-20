@@ -1,6 +1,7 @@
 using CompanyEmployeesCQRS.Extensions;
 using CompanyEmployeesCQRS.Presentation.ActionFilters;
 using Contracts;
+using MediatR;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
@@ -23,6 +24,7 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<ValidateMediaTypeAttribute>();
+builder.Services.AddMediatR(typeof(Application.AssemblyReference).Assembly);
 
 // Prevent the controller to return default response (this belongs to the [ApiController] attribute).
 builder.Services.Configure<ApiBehaviorOptions>(options =>
