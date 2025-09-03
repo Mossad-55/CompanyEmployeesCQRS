@@ -24,7 +24,10 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<ValidateMediaTypeAttribute>();
-builder.Services.AddMediatR(typeof(Application.AssemblyReference).Assembly);
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(typeof(Application.AssemblyReference).Assembly);
+});
 
 // Prevent the controller to return default response (this belongs to the [ApiController] attribute).
 builder.Services.Configure<ApiBehaviorOptions>(options =>
