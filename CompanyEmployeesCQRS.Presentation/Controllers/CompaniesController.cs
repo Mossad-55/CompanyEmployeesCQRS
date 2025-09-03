@@ -1,6 +1,9 @@
-﻿using Application.Queries.Companies;
+﻿using Application.Commands.Companies;
+using Application.Queries.Companies;
+using CompanyEmployeesCQRS.Presentation.ActionFilters;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
 
 namespace CompanyEmployeesCQRS.Presentation.Controllers;
@@ -27,5 +30,14 @@ public class CompaniesController : ControllerBase
         var company = await _sender.Send(new GetCompanyQuery(id, false));
 
         return Ok(company);
+    }
+
+    [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto dto)
+    {
+        var company = await _sender.Send(new CreateCompanyCommand(dto));
+
+        return CreatedAtRoute("CompanyById", new { id = company.Id }, company);
     }
 }
