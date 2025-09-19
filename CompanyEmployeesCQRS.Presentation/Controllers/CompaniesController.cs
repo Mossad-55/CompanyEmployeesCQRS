@@ -40,4 +40,13 @@ public class CompaniesController : ControllerBase
 
         return CreatedAtRoute("CompanyById", new { id = company.Id }, company);
     }
+
+    [HttpPut("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto dto)
+    {
+        await _sender.Send(new UpdateCompanyCommand(id, dto, true));
+
+        return NoContent();
+    }
 }
