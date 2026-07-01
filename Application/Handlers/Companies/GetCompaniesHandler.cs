@@ -3,10 +3,11 @@ using AutoMapper;
 using Contracts;
 using MediatR;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Application.Handlers.Companies;
 
-internal sealed class GetCompaniesHandler : IRequestHandler<GetCompaniesQuery, IEnumerable<CompanyDto>>
+internal sealed class GetCompaniesHandler : IRequestHandler<GetCompaniesQuery, (IEnumerable<CompanyDto>, MetaData)>
 {
     private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
@@ -17,12 +18,12 @@ internal sealed class GetCompaniesHandler : IRequestHandler<GetCompaniesQuery, I
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<CompanyDto>> Handle(GetCompaniesQuery request, CancellationToken cancellationToken)
+    public async Task<(IEnumerable<CompanyDto>, MetaData)> Handle(GetCompaniesQuery request, CancellationToken cancellationToken)
     {
-        var companies = await _repository.Company.GetAllCompaniesAsync(request.companyParameters, request.trackChanges);
+        var companiesWithMetaData = await _repository.Company.GetAllCompaniesAsync(request.companyParameters, request.trackChanges);
 
-        var companiesDtos = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+        var companiesDtos = _mapper.Map<IEnumerable<CompanyDto>>(companiesWithMetaData);
 
-        return companiesDtos;
+        return (companiesDtos, companiesWithMetaData.MetaData);
     }
 }

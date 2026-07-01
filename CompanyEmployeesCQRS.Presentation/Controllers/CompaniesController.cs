@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
+using System.Text.Json;
 
 namespace CompanyEmployeesCQRS.Presentation.Controllers;
 
@@ -19,9 +20,11 @@ public class CompaniesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
     {
-        var companies = await _sender.Send(new GetCompaniesQuery(companyParameters, false));
+        var companiesWithMetaData = await _sender.Send(new GetCompaniesQuery(companyParameters, false));
 
-        return Ok(companies);
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(companiesWithMetaData.MetaData));
+
+        return Ok(companiesWithMetaData.Companies);
     }
 
     [HttpGet("{id:guid}", Name = "CompanyById")]

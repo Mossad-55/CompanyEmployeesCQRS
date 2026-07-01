@@ -4,4 +4,4 @@ using Shared.RequestFeatures;
 
 namespace Application.Queries.Companies;
 
-public sealed record GetCompaniesQuery(CompanyParameters companyParameters, bool trackChanges) : IRequest<IEnumerable<CompanyDto>>;
+public sealed record GetCompaniesQuery(CompanyParameters companyParameters, bool trackChanges) : IRequest<(IEnumerable<CompanyDto> Companies, MetaData MetaData)>;
