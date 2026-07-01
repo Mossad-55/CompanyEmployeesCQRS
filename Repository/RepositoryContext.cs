@@ -5,7 +5,7 @@ using Repository.Configuration;
 
 namespace Repository;
 
-public class RepositoryContext : IdentityDbContext<User>
+public class RepositoryContext : DbContext
 {
 	public RepositoryContext(DbContextOptions options)
 		: base(options)
@@ -19,7 +19,6 @@ public class RepositoryContext : IdentityDbContext<User>
 
 		modelBuilder.ApplyConfiguration(new CompanyConfiguration());
 		modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-		modelBuilder.ApplyConfiguration(new RoleConfiguration());
 	}
 
 	public DbSet<Company>? Companies { get; set; }
