@@ -1,6 +1,10 @@
-﻿using Application.Queries.Employees;
+﻿using Application.Commands.Companies;
+using Application.Commands.Employees;
+using Application.Queries.Employees;
+using CompanyEmployeesCQRS.Presentation.ActionFilters;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
 using System.Text.Json;
 
@@ -14,7 +18,7 @@ public class EmployeesController : ControllerBase
 
     public EmployeesController(ISender sender) => _sender = sender;
 
-    [HttpGet]
+    [HttpGet(Name = "GetEmployeeForCompany")]
     public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
     {
         var employeesWithMetaData = await _sender.Send(new GetEmployeesQuery(companyId, employeeParameters, false, false));
@@ -30,5 +34,14 @@ public class EmployeesController : ControllerBase
         var employee = await _sender.Send(new GetEmployeeQuery(companyId, id, false, false));
 
         return Ok(employee);
+    }
+
+    [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employeeForCreationDto)
+    {
+        var employeeToReturn = await _sender.Send(new CreateEmployeeCommand(companyId, employeeForCreationDto, false, false));
+
+        return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, employeeToReturn);
     }
 }
