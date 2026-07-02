@@ -52,4 +52,12 @@ public class EmployeesController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
+    {
+        await _sender.Send(new DeleteEmployeeCommand(companyId, id, false, false));
+
+        return NoContent();
+    }
 }
