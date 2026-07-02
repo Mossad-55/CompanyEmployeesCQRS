@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace CompanyEmployeesCQRS.Presentation.Controllers;
 
-[Route("api/{companyId}/employees")]
+[Route("api/companies/{companyId}/employees")]
 [ApiController]
 public class EmployeesController : ControllerBase
 {
