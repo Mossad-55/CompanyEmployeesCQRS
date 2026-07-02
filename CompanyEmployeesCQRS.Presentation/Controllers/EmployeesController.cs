@@ -1,5 +1,4 @@
-﻿using Application.Commands.Companies;
-using Application.Commands.Employees;
+﻿using Application.Commands.Employees;
 using Application.Queries.Employees;
 using CompanyEmployeesCQRS.Presentation.ActionFilters;
 using MediatR;
