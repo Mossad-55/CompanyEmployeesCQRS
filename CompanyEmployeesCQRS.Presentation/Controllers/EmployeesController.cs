@@ -23,4 +23,12 @@ public class EmployeesController : ControllerBase
 
         return Ok(employeesWithMetaData.Employees);
     }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
+    {
+        var employee = await _sender.Send(new GetEmployeeQuery(companyId, id, false, false));
+
+        return Ok(employee);
+    }
 }
