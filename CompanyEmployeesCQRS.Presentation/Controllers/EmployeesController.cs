@@ -43,4 +43,13 @@ public class EmployeesController : ControllerBase
 
         return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, employeeToReturn);
     }
+
+    [HttpPut("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employeeForUpdateDto)
+    {
+        await _sender.Send(new UpdateEmployeeCommand(companyId, id, employeeForUpdateDto, false, true));
+
+        return NoContent();
+    }
 }
