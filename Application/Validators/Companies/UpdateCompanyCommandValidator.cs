@@ -1,12 +1,11 @@
 ﻿using Application.Commands.Companies;
 using FluentValidation;
-using FluentValidation.Results;
 
 namespace Application.Validators.Companies;
 
-public sealed class CreateCompanyCommandValidator : AbstractValidator<CreateCompanyCommand>
+public sealed class UpdateCompanyCommandValidator : AbstractValidator<UpdateCompanyCommand>
 {
-    public CreateCompanyCommandValidator()
+    public UpdateCompanyCommandValidator()
     {
         RuleFor(c => c.Company.Name).NotEmpty().MaximumLength(30);
 
