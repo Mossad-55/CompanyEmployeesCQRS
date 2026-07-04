@@ -1,4 +1,5 @@
 ﻿using Application.Commands.Employees;
+using Application.Notifications.Employees;
 using Application.Queries.Employees;
 using CompanyEmployeesCQRS.Presentation.ActionFilters;
 using MediatR;
@@ -14,8 +15,13 @@ namespace CompanyEmployeesCQRS.Presentation.Controllers;
 public class EmployeesController : ControllerBase
 {
     private readonly ISender _sender;
+    private readonly IPublisher _publisher;
 
-    public EmployeesController(ISender sender) => _sender = sender;
+    public EmployeesController(ISender sender, IPublisher publisher)
+    {
+        _sender = sender;
+        _publisher = publisher;
+    }
 
     [HttpGet(Name = "GetEmployeeForCompany")]
     public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
@@ -56,7 +62,7 @@ public class EmployeesController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
     {
-        await _sender.Send(new DeleteEmployeeCommand(companyId, id, false, false));
+        await _publisher.Publish(new EmployeeDeletedNotification(companyId, id, false, false));
 
         return NoContent();
     }
