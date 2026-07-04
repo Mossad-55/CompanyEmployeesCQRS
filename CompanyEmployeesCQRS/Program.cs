@@ -1,6 +1,7 @@
 using CompanyEmployeesCQRS.Extensions;
 using CompanyEmployeesCQRS.Presentation.ActionFilters;
 using Contracts;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(typeof(Application.AssemblyReference).Assembly);
 });
+builder.Services.AddValidatorsFromAssembly(typeof(Application.AssemblyReference).Assembly);
 
 // Prevent the controller to return default response (this belongs to the [ApiController] attribute).
 builder.Services.Configure<ApiBehaviorOptions>(options =>
