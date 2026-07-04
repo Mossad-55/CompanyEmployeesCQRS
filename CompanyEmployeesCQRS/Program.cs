@@ -1,3 +1,4 @@
+using Application.Behaviors;
 using CompanyEmployeesCQRS.Extensions;
 using CompanyEmployeesCQRS.Presentation.ActionFilters;
 using Contracts;
@@ -26,6 +27,7 @@ builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(typeof(Application.AssemblyReference).Assembly);
 });
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddValidatorsFromAssembly(typeof(Application.AssemblyReference).Assembly);
 
 // Prevent the controller to return default response (this belongs to the [ApiController] attribute).
