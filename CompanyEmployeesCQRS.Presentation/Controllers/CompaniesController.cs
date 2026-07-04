@@ -1,4 +1,5 @@
 ﻿using Application.Commands.Companies;
+using Application.Notifications.Companies;
 using Application.Queries.Companies;
 using CompanyEmployeesCQRS.Presentation.ActionFilters;
 using MediatR;
@@ -14,8 +15,13 @@ namespace CompanyEmployeesCQRS.Presentation.Controllers;
 public class CompaniesController : ControllerBase
 {
     private readonly ISender _sender;
+    private readonly IPublisher _publisher;
 
-    public CompaniesController(ISender sender) => _sender = sender;
+    public CompaniesController(ISender sender, IPublisher publisher)
+    {
+        _sender = sender;
+        _publisher = publisher;
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
@@ -56,7 +62,7 @@ public class CompaniesController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteCompany(Guid id)
     {
-        await _sender.Send(new DeleteCompanyCommand(id, false));
+        await _publisher.Publish(new CompanyDeletedNotification(id, false));
 
         return NoContent();
     }
